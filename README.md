@@ -4,6 +4,8 @@
 
 ## Ссылка для обращения к бэкенд части проекта
 
+IP  84.201.131.51
+
 https://api.moviesearcher.kirga.nomoredomains.rocks
 
 ## Директории
