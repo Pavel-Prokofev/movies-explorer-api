@@ -5,8 +5,13 @@ const {
   login,
 } = require('../controllers/sign');
 
-signRouter.post('/signup', createUser);
+const {
+  createUserValidation,
+  loginValidation,
+} = require('../middlewares/validationJoi');
 
-signRouter.post('/signin', login);
+signRouter.post('/signup', createUserValidation, createUser);
+
+signRouter.post('/signin', loginValidation, login);
 
 module.exports = signRouter;

@@ -5,49 +5,43 @@ const {
 } = require('../utils/errorsHandler');
 
 const createMovie = (req, res, next) => {
-  const { movieId } = req.body;
+  const {
+    movieId,
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    nameRU,
+    nameEN,
+  } = req.body;
   const owner = req.user._id;
-  Movie.findOne({ movieId })
-    .then((movie) => {
-      if (!movie) {
-        const {
-          country,
-          director,
-          duration,
-          year,
-          description,
-          image,
-          trailerLink,
-          thumbnail,
-          nameRU,
-          nameEN,
-        } = req.body;
-        Movie.create({
-          country,
-          director,
-          duration,
-          year,
-          description,
-          image,
-          trailerLink,
-          thumbnail,
-          movieId,
-          owner,
-          nameRU,
-          nameEN,
-        })
-          .then((newMovie) => res.status(statusCreatingOk).send(newMovie))
-          .catch(next);
-      } else {
-        Movie.findOneAndUpdate(
-          { movieId },
-          { $addToSet: { owner } },
-          { new: true },
-        )
-          .then((upMovie) => res.status(statusCreatingOk).send(upMovie))
-          .catch(next);
-      }
-    })
+  Movie.findOneAndUpdate(
+    { movieId },
+    {
+      movieId,
+      country,
+      director,
+      duration,
+      year,
+      description,
+      image,
+      trailerLink,
+      thumbnail,
+      nameRU,
+      nameEN,
+      $addToSet: { owner },
+    },
+    {
+      new: true,
+      runValidators: true,
+      upsert: true,
+    },
+  )
+    .then((upMovie) => res.status(statusCreatingOk).send(upMovie))
     .catch(next);
 };
 

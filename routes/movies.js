@@ -6,10 +6,15 @@ const {
   dellMovieById,
 } = require('../controllers/movies');
 
+const {
+  createMovieValidation,
+  paramsMovieIdValidation,
+} = require('../middlewares/validationJoi');
+
 moviesRouter.get('/', returnAllMoviesThisUser);
 
-moviesRouter.post('/', createMovie);
+moviesRouter.post('/', createMovieValidation, createMovie);
 
-moviesRouter.delete('/:_id', dellMovieById);
+moviesRouter.delete('/:_id', paramsMovieIdValidation, dellMovieById);
 
 module.exports = moviesRouter;
