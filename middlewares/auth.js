@@ -1,13 +1,15 @@
 const jwt = require('jsonwebtoken');
+
 const { JWT_SECRET } = require('../utils/constants');
 
-const { orFailFunction } = require('../utils/errorsHandler');
+const InvalidAuthorization = require('../utils/errors/InvalidAuthorization');
+const { invalidAuthorizationJwtText } = require('../utils/constants');
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    next(orFailFunction('InvalidAuthorizationJwt'));
+    next(new InvalidAuthorization(invalidAuthorizationJwtText));
   } else {
     const token = authorization.replace('Bearer ', '');
     let payload;
@@ -17,7 +19,7 @@ module.exports = (req, res, next) => {
       req.user = payload;
       next();
     } catch (error) {
-      next(orFailFunction('InvalidAuthorizationJwt'));
+      next(new InvalidAuthorization(invalidAuthorizationJwtText));
     }
   }
 };

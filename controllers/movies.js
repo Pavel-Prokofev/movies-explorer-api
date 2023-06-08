@@ -1,8 +1,14 @@
 const Movie = require('../models/movie');
+
+const NotFoundError = require('../utils/errors/NotFoundError');
+const Forbidden = require('../utils/errors/Forbidden');
+const NotUnique = require('../utils/errors/NotUnique');
 const {
+  notFoundText,
+  forbiddenText,
+  moviesNotUniqueText,
   statusCreatingOk,
-  orFailFunction,
-} = require('../utils/errorsHandler');
+} = require('../utils/constants');
 
 const createMovie = (req, res, next) => {
   const {
@@ -19,51 +25,42 @@ const createMovie = (req, res, next) => {
     nameEN,
   } = req.body;
   const owner = req.user._id;
-  Movie.findOneAndUpdate(
-    { movieId },
-    {
-      movieId,
-      country,
-      director,
-      duration,
-      year,
-      description,
-      image,
-      trailerLink,
-      thumbnail,
-      nameRU,
-      nameEN,
-      $addToSet: { owner },
-    },
-    {
-      new: true,
-      runValidators: true,
-      upsert: true,
-    },
-  )
-    .then((upMovie) => res.status(statusCreatingOk).send(upMovie))
+  Movie.findOne({ movieId, owner })
+    .then((desiredMovie) => {
+      if (desiredMovie) {
+        throw new NotUnique(moviesNotUniqueText);
+      } else {
+        Movie.create({
+          movieId,
+          country,
+          director,
+          duration,
+          year,
+          description,
+          image,
+          trailerLink,
+          thumbnail,
+          nameRU,
+          nameEN,
+          owner,
+        })
+          .then((newMovie) => res.status(statusCreatingOk).send(newMovie))
+          .catch(next);
+      }
+    })
     .catch(next);
 };
 
 const dellMovieById = (req, res, next) => {
-  Movie.findOne({ movieId: Number(req.params._id) })
-    .orFail(() => { throw orFailFunction('NotFound'); })
+  Movie.findOne({ _id: req.params._id })
+    .orFail(() => { throw new NotFoundError(notFoundText); })
     .then((movie) => {
       const owner = req.user._id;
-      const ownerArrLength = Number(movie.owner.length);
-      const right = movie.owner.some((own) => String(own) === owner);
+      const right = String(movie.owner) === owner;
       if (!right) {
-        throw orFailFunction('Forbidden');
-      } else if (ownerArrLength === 1) {
-        Movie.deleteOne(movie)
-          .then(() => res.send({ message: 'Фильм удалён из избранного' }))
-          .catch(next);
+        throw new Forbidden(forbiddenText);
       } else {
-        Movie.updateOne(
-          movie,
-          { $pull: { owner } },
-          { new: true },
-        )
+        Movie.deleteOne(movie)
           .then(() => res.send({ message: 'Фильм удалён из избранного' }))
           .catch(next);
       }
@@ -74,7 +71,9 @@ const dellMovieById = (req, res, next) => {
 const returnAllMoviesThisUser = (req, res, next) => {
   const owner = req.user._id;
   Movie.find({ owner })
-    .then((allMoviesThisUser) => res.send(allMoviesThisUser))
+    .then((allMoviesThisUser) => {
+      res.send(allMoviesThisUser);
+    })
     .catch(next);
 };
 

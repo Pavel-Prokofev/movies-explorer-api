@@ -11,9 +11,9 @@ const {
   paramsMovieIdValidation,
 } = require('../middlewares/validationJoi');
 
-moviesRouter.get('/', returnAllMoviesThisUser);
+moviesRouter.get('/', createMovieValidation, returnAllMoviesThisUser);
 
-moviesRouter.post('/', createMovieValidation, createMovie);
+moviesRouter.post('/', createMovie);
 
 moviesRouter.delete('/:_id', paramsMovieIdValidation, dellMovieById);
 

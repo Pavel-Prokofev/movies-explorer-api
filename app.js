@@ -21,13 +21,13 @@ mongoose.connect(DB)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(requestLogger);
+
 app.use(limiter);
 
 app.use(helmet());
 
 app.use(cors);
-
-app.use(requestLogger);
 
 app.use(routers);
 

@@ -6,14 +6,14 @@ const createUserValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(7),
+    password: Joi.string().required(),
   }),
 });
 
 const loginValidation = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(7),
+    password: Joi.string().required(),
   }),
 });
 
@@ -42,7 +42,7 @@ const createMovieValidation = celebrate({
 
 const paramsMovieIdValidation = celebrate({
   params: Joi.object().keys({
-    _id: Joi.number().required(),
+    _id: Joi.string().hex().required().length(24),
   }),
 });
 

@@ -19,7 +19,7 @@
   "bugs": {
     "url": "https://github.com/Pavel-Prokofev/movies-explorer-api/issues"
   },
-  "homepage": "https://github.com/Pavel-Prokofev/movies-explorer-api#readme",
+  "homepage": "",
   "devDependencies": {
     "eslint": "^8.41.0",
     "nodemon": "^2.0.22"

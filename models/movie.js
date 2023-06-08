@@ -47,12 +47,11 @@ const movieSchema = new mongoose.Schema({
       message: 'Неправильный URL мини изображения постера к фильму',
     },
   },
-  owner: [{
+  owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     required: true,
-    default: [],
-  }],
+  },
   movieId: {
     type: Number,
     required: true,
