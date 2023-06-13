@@ -18,6 +18,7 @@ const notFoundUrlText = 'Неверный URl запроса.';
 const emailNotUniqueText = 'Такая почта уже зарегистрирована.';
 const moviesNotUniqueText = 'Этот филь уже добавлен в избранное данным пользователем.';
 const serverErrorText = 'На сервере произошла ошибка.';
+const moviesDeletedText = 'Фильм удалён из избранного';
 
 const statusCreatingOk = 201;
 
@@ -37,4 +38,5 @@ module.exports = {
   moviesNotUniqueText,
   serverErrorText,
   statusCreatingOk,
+  moviesDeletedText,
 };

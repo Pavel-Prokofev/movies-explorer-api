@@ -8,6 +8,7 @@ const {
   forbiddenText,
   moviesNotUniqueText,
   statusCreatingOk,
+  moviesDeletedText,
 } = require('../utils/constants');
 
 const createMovie = (req, res, next) => {
@@ -61,7 +62,7 @@ const dellMovieById = (req, res, next) => {
         throw new Forbidden(forbiddenText);
       } else {
         Movie.deleteOne(movie)
-          .then(() => res.send({ message: 'Фильм удалён из избранного' }))
+          .then(() => res.send({ message: moviesDeletedText }))
           .catch(next);
       }
     })
