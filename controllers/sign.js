@@ -18,7 +18,8 @@ const createUser = (req, res, next) => {
     .then((newUser) => {
       const newUserEdited = JSON.parse(JSON.stringify(newUser));
       delete newUserEdited.password;
-      res.status(statusCreatingOk).send(newUserEdited);
+      const token = jwt.sign({ _id: newUser._id }, JWT_SECRET, { expiresIn: '7d' });
+      res.status(statusCreatingOk).send({ user: newUserEdited, token });
     })
     .catch(next);
 };
@@ -27,8 +28,10 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials({ email, password })
     .then((user) => {
+      const userEdited = JSON.parse(JSON.stringify(user));
+      delete userEdited.password;
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-      res.send({ token });
+      res.send({ user: userEdited, token });
     })
     .catch(next);
 };
