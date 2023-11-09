@@ -6,7 +6,8 @@
 
 IP  51.250.70.254
 
-https://api.moviesearcher.kirga.nomoredomains.rocks
+~~https://api.moviesearcher.kirga.nomoredomains.rocks~~ 
+**Временно недоступен в связи с переездом на другой хост**
 
 ## Директории
 
